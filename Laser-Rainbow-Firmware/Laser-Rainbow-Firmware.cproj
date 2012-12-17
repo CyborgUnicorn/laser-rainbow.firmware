@@ -40,7 +40,7 @@
         <documentation help="http://asf.atmel.com/docs/3.5.0/common.applications.user_application.user_board.xmegaau/html/index.html" />
       </framework-data>
     </AsfFrameworkConfig>
-    <avrdevice>ATxmega32A4U</avrdevice>
+    <avrdevice>ATmega32U4</avrdevice>
     <avrdeviceseries>xmegaau</avrdeviceseries>
     <Language>C</Language>
     <ToolchainName>com.Atmel.AVRGCC8</ToolchainName>
@@ -55,7 +55,8 @@
     <OverrideVtorValue />
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <avrtoolinterface />
-    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtool>
+    </avrtool>
     <com_atmel_avrdbg_tool_simulator>
       <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
       <ToolName xmlns="">AVR Simulator</ToolName>
@@ -138,6 +139,10 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
       <AvrGcc>
+        <avrgcc.common.outputfiles.hex>True</avrgcc.common.outputfiles.hex>
+        <avrgcc.common.outputfiles.lss>True</avrgcc.common.outputfiles.lss>
+        <avrgcc.common.outputfiles.eep>True</avrgcc.common.outputfiles.eep>
+        <avrgcc.common.outputfiles.srec>True</avrgcc.common.outputfiles.srec>
         <avrgcc.compiler.symbols.DefSymbols>
           <ListValues>
             <Value>BOARD=USER_BOARD</Value>
@@ -155,6 +160,16 @@
             <Value>../src/config</Value>
           </ListValues>
         </avrgcc.compiler.directories.IncludePaths>
+        <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
+        <avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
+        <avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avrgcc.compiler.optimization.DebugLevel>Maximum (-g3)</avrgcc.compiler.optimization.DebugLevel>
+        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
+        <avrgcc.compiler.miscellaneous.OtherFlags>-Werror-implicit-function-declaration -Wmissing-prototypes -Wpointer-arith -Wstrict-prototypes -mrelax -std=gnu99</avrgcc.compiler.miscellaneous.OtherFlags>
+        <avrgcc.linker.optimization.GarbageCollectUnusedSections>True</avrgcc.linker.optimization.GarbageCollectUnusedSections>
+        <avrgcc.linker.optimization.RelaxBranches>True</avrgcc.linker.optimization.RelaxBranches>
+        <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax</avrgcc.linker.miscellaneous.LinkerFlags>
+        <avrgcc.assembler.general.AssemblerFlags>-DBOARD=USER_BOARD -mrelax</avrgcc.assembler.general.AssemblerFlags>
         <avrgcc.assembler.general.IncludePaths>
           <ListValues>
             <Value>../src</Value>
@@ -167,29 +182,6 @@
             <Value>../src/config</Value>
           </ListValues>
         </avrgcc.assembler.general.IncludePaths>
-        <!-- Project configurable options -->
-        <avrgcc.compiler.optimization.level>Optimize (-O1)</avrgcc.compiler.optimization.level>
-        <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax</avrgcc.linker.miscellaneous.LinkerFlags>
-        <avrgcc.linker.libraries.Libraries>
-          <ListValues />
-        </avrgcc.linker.libraries.Libraries>
-        <avrgcc.linker.libraries.LibrarySearchPaths>
-          <ListValues />
-        </avrgcc.linker.libraries.LibrarySearchPaths>
-        <avrgcc.linker.general.DoNotUseStandardStartFiles />
-        <avrgcc.linker.general.DoNotUseDefaultLibraries />
-        <avrgcc.linker.general.NoStartupOrDefaultLibs />
-        <!-- Fixed options, according to ASF 2 MEGA/XMEGA Makefile -->
-        <avrgcc.compiler.warnings.AllWarnings>True</avrgcc.compiler.warnings.AllWarnings>
-        <avrgcc.compiler.optimization.DebugLevel>Maximum (-g3)</avrgcc.compiler.optimization.DebugLevel>
-        <avrgcc.linker.optimization.RelaxBranches>True</avrgcc.linker.optimization.RelaxBranches>
-        <avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>False</avrgcc.compiler.general.ChangeDefaultCharTypeUnsigned>
-        <avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>False</avrgcc.compiler.general.ChangeDefaultBitFieldUnsigned>
-        <avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avrgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-        <avrgcc.linker.optimization.GarbageCollectUnusedSections>True</avrgcc.linker.optimization.GarbageCollectUnusedSections>
-        <avrgcc.compiler.optimization.OtherFlags>-fdata-sections</avrgcc.compiler.optimization.OtherFlags>
-        <avrgcc.compiler.miscellaneous.OtherFlags>-Werror-implicit-function-declaration -Wmissing-prototypes -Wpointer-arith -Wstrict-prototypes -mrelax -std=gnu99</avrgcc.compiler.miscellaneous.OtherFlags>
-        <avrgcc.assembler.general.AssemblerFlags>-DBOARD=USER_BOARD -mrelax</avrgcc.assembler.general.AssemblerFlags>
       </AvrGcc>
     </ToolchainSettings>
     <MemorySettings />
@@ -199,82 +191,79 @@
     <GenerateEepFile>True</GenerateEepFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="src\asf\common\boards\user_board\init.c">
+    <Compile Include="src\board.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\compiler.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\config.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_usb.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.c">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\asf.h">
+    <Compile Include="src\pll\pll_drv.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\boards\board.h">
+    </Compile>
+    <Compile Include="src\usb\commands.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\boards\user_board\user_board.h">
+    </Compile>
+    <Compile Include="src\usb\device\usb_device_task.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\utils\interrupt.h">
+    </Compile>
+    <Compile Include="src\usb\device\usb_device_task.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\utils\interrupt\interrupt_avr8.h">
+    </Compile>
+    <Compile Include="src\usb\device\usb_specific_request.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\utils\make\Makefile.avr.in">
+    </Compile>
+    <Compile Include="src\usb\device\usb_specific_request.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\common\utils\parts.h">
+    </Compile>
+    <Compile Include="src\usb\device\usb_standard_request.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\assembler.h">
+    </Compile>
+    <Compile Include="src\usb\device\usb_standard_request.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\assembler\gas.h">
+    </Compile>
+    <Compile Include="src\usb\usb_commun.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\bit_handling\clz_ctz.h">
+    </Compile>
+    <Compile Include="src\usb\usb_commun_cdc.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\compiler.h">
+    </Compile>
+    <Compile Include="src\usb\usb_descriptors.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\preprocessor\mrepeat.h">
+    </Compile>
+    <Compile Include="src\usb\usb_descriptors.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\preprocessor\preprocessor.h">
+    </Compile>
+    <Compile Include="src\usb\usb_drv.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\preprocessor\stringz.h">
+    </Compile>
+    <Compile Include="src\usb\usb_drv.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\preprocessor\tpaste.h">
+    </Compile>
+    <Compile Include="src\usb\usb_task.c">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\progmem.h">
+    </Compile>
+    <Compile Include="src\usb\usb_task.h">
       <SubType>compile</SubType>
-    </None>
-    <None Include="src\asf\xmega\utils\status_codes.h">
-      <SubType>compile</SubType>
-    </None>
+    </Compile>
     <None Include="src\config\conf_board.h">
       <SubType>compile</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />
-    <Folder Include="src\asf\" />
-    <Folder Include="src\asf\common\" />
-    <Folder Include="src\asf\common\boards\" />
-    <Folder Include="src\asf\common\boards\user_board\" />
-    <Folder Include="src\asf\common\utils\" />
-    <Folder Include="src\asf\common\utils\interrupt\" />
-    <Folder Include="src\asf\common\utils\make\" />
-    <Folder Include="src\asf\xmega\" />
-    <Folder Include="src\asf\xmega\utils\" />
-    <Folder Include="src\asf\xmega\utils\assembler\" />
-    <Folder Include="src\asf\xmega\utils\bit_handling\" />
-    <Folder Include="src\asf\xmega\utils\preprocessor\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\pll" />
+    <Folder Include="src\usb" />
+    <Folder Include="src\usb\device" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC.targets" />
 </Project>
