@@ -1,10 +1,10 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 //! \file *********************************************************************
 //!
-//! \brief This file contains the system configuration definition.
+//! \brief 
 //!
 //! - Compiler:           IAR EWAVR and GNU GCC for AVR
-//! - Supported devices:  ATmega32U4
+//! - Supported devices:  AT90USB1287, AT90USB1286, AT90USB647, AT90USB646
 //!
 //! \author               Atmel Corporation: http://www.atmel.com \n
 //!                       Support and FAQ: http://support.atmel.no/
@@ -38,66 +38,18 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _START_BOOT_H_
+#define _START_BOOT_H_
 
-// Compiler switch (do not change these settings)
-#include "compiler.h"             // Compiler definitions
+#define GOTOBOOTKEY  0x55AAAA55
+
 #ifdef __GNUC__
-   #include <avr/io.h>                    // Use AVR-GCC library
-#elif __ICCAVR__
-   #define ENABLE_BIT_DEFINITIONS
-   #include <ioavr.h>                     // Use IAR-AVR library
+   extern U32 boot_key __attribute__ ((section (".noinit")));
 #else
-   #error Current COMPILER not supported
+   extern __no_init U32 boot_key; 
 #endif
 
+void start_boot_if_required(void);   
+void start_boot(void);
 
-//! @defgroup global_config Application configuration
-//! @{
-
-//#include "conf_scheduler.h" //!< Scheduler tasks declaration
-
-//! Enable or not the ADC usage
-//#undef  USE_ADC
-//
-//// Board defines (do not change these settings)
-//#define  EVK527   1
-//
-//// Select board
-//#define  TARGET_BOARD EVK527
-//#include "lib_board/evk_527/evk_527.h"
-//
-//! CPU core frequency in kHz
-#define FOSC 8000
-#define PLL_OUT_FRQ  PLL_OUT_96MHZ
-
-
-// -------- END Generic Configuration -------------------------------------
-
-// UART Sample configuration, if we have one ... __________________________
-#define BAUDRATE        38400
-#define USE_UART2
-#define UART_U2
-
-//#define uart_putchar putchar
-#ifndef __GNUC__
-   #define uart_usb_putchar putchar
 #endif
-#define r_uart_ptchar int
-#define p_uart_ptchar int
-
-#define REPEAT_KEY_PRESSED       100
-
-//! @}
-
-/*--------------- SCHEDULER CONFIGURATION --------------*/
-#define SCHEDULER_TYPE          SCHEDULER_FREE  // SCHEDULER_(TIMED|TASK|FREE|CUSTOM)
-#define Scheduler_task_1_init   usb_task_init
-#define Scheduler_task_1        usb_task
-#define Scheduler_task_2_init   cdc_task_init
-#define Scheduler_task_2        cdc_task
-
-
-#endif // _CONFIG_H_
-

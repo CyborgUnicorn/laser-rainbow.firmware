@@ -1,7 +1,7 @@
 /*This file has been prepared for Doxygen automatic documentation generation.*/
 //! \file *********************************************************************
 //!
-//! \brief This file contains the system configuration definition.
+//! \brief This file contains the function declarations
 //!
 //! - Compiler:           IAR EWAVR and GNU GCC for AVR
 //! - Supported devices:  ATmega32U4
@@ -38,66 +38,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _CDC_TASK_H_
+#define _CDC_TASK_H_
 
-// Compiler switch (do not change these settings)
-#include "compiler.h"             // Compiler definitions
-#ifdef __GNUC__
-   #include <avr/io.h>                    // Use AVR-GCC library
-#elif __ICCAVR__
-   #define ENABLE_BIT_DEFINITIONS
-   #include <ioavr.h>                     // Use IAR-AVR library
-#else
-   #error Current COMPILER not supported
-#endif
+//_____ I N C L U D E S ____________________________________________________
 
 
-//! @defgroup global_config Application configuration
-//! @{
+#include "config.h"
 
-//#include "conf_scheduler.h" //!< Scheduler tasks declaration
-
-//! Enable or not the ADC usage
-//#undef  USE_ADC
-//
-//// Board defines (do not change these settings)
-//#define  EVK527   1
-//
-//// Select board
-//#define  TARGET_BOARD EVK527
-//#include "lib_board/evk_527/evk_527.h"
-//
-//! CPU core frequency in kHz
-#define FOSC 8000
-#define PLL_OUT_FRQ  PLL_OUT_96MHZ
+//_____ M A C R O S ________________________________________________________
 
 
-// -------- END Generic Configuration -------------------------------------
 
-// UART Sample configuration, if we have one ... __________________________
-#define BAUDRATE        38400
-#define USE_UART2
-#define UART_U2
-
-//#define uart_putchar putchar
-#ifndef __GNUC__
-   #define uart_usb_putchar putchar
-#endif
-#define r_uart_ptchar int
-#define p_uart_ptchar int
-
-#define REPEAT_KEY_PRESSED       100
-
-//! @}
-
-/*--------------- SCHEDULER CONFIGURATION --------------*/
-#define SCHEDULER_TYPE          SCHEDULER_FREE  // SCHEDULER_(TIMED|TASK|FREE|CUSTOM)
-#define Scheduler_task_1_init   usb_task_init
-#define Scheduler_task_1        usb_task
-#define Scheduler_task_2_init   cdc_task_init
-#define Scheduler_task_2        cdc_task
+//_____ D E C L A R A T I O N S ____________________________________________
 
 
-#endif // _CONFIG_H_
+void sof_action(void);
+
+
+#endif /* _CDC_TASK_H_ */
 

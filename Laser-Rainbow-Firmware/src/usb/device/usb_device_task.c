@@ -52,7 +52,7 @@
 #include "../usb_drv.h"
 #include "../usb_descriptors.h"
 #include "usb_standard_request.h"
-#include "../../pll/pll_drv.h"
+#include "usb/pll_drv.h"
 //#ifdef USE_USB_AUTOBAUD
 //#include "lib_mcu/wdt/wdt_drv.h"
 //#endif

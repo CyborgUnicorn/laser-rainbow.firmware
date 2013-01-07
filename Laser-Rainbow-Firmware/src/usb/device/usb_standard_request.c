@@ -53,7 +53,7 @@
 #include "../usb_drv.h"
 #include "../usb_descriptors.h"
 #include "usb_standard_request.h"
-#include "../../pll/pll_drv.h"
+#include "usb/pll_drv.h"
 #include "usb_specific_request.h"
 
 

@@ -47,7 +47,7 @@
 //_____ I N C L U D E S ____________________________________________________
 
 //#include "../config/config.h"
-#include "usb_standard_request.h"
+#include "usb/device/usb_standard_request.h"
 #include "../config/conf_usb.h"
 
 //_____ M A C R O S ________________________________________________________
@@ -132,40 +132,46 @@
 
 
 
-#define USB_MN_LENGTH         5
+#define USB_MN_LENGTH         14
 #define USB_MANUFACTURER_NAME \
-{ Usb_unicode('A') \
-, Usb_unicode('T') \
-, Usb_unicode('M') \
-, Usb_unicode('E') \
-, Usb_unicode('L') \
+{ Usb_unicode('C') \
+, Usb_unicode('y') \
+, Usb_unicode('b') \
+, Usb_unicode('o') \
+, Usb_unicode('r') \
+, Usb_unicode('g') \
+, Usb_unicode(' ') \
+, Usb_unicode('U') \
+, Usb_unicode('n') \
+, Usb_unicode('i') \
+, Usb_unicode('c') \
+, Usb_unicode('o') \
+, Usb_unicode('r') \
+, Usb_unicode('n') \
 }
 
-#define USB_PN_LENGTH         16
+#define USB_PN_LENGTH         13
 #define USB_PRODUCT_NAME \
-{ Usb_unicode('A') \
- ,Usb_unicode('V') \
+{ Usb_unicode('L') \
+ ,Usb_unicode('a') \
+ ,Usb_unicode('s') \
+ ,Usb_unicode('e') \
+ ,Usb_unicode('r') \
+ ,Usb_unicode(' ') \
  ,Usb_unicode('R') \
- ,Usb_unicode(' ') \
- ,Usb_unicode('U') \
- ,Usb_unicode('S') \
- ,Usb_unicode('B') \
- ,Usb_unicode(' ') \
- ,Usb_unicode('C') \
- ,Usb_unicode('D') \
- ,Usb_unicode('C') \
- ,Usb_unicode(' ') \
- ,Usb_unicode('D') \
- ,Usb_unicode('E') \
- ,Usb_unicode('M') \
- ,Usb_unicode('O') \
+ ,Usb_unicode('a') \
+ ,Usb_unicode('i') \
+ ,Usb_unicode('n') \
+ ,Usb_unicode('b') \
+ ,Usb_unicode('o') \
+ ,Usb_unicode('w') \
 }
 
 #define USB_SN_LENGTH         0x05
 #define USB_SERIAL_NUMBER \
-{Usb_unicode('1') \
+{Usb_unicode('0') \
  ,Usb_unicode('.') \
- ,Usb_unicode('0') \
+ ,Usb_unicode('1') \
  ,Usb_unicode('.') \
  ,Usb_unicode('0') \
 }

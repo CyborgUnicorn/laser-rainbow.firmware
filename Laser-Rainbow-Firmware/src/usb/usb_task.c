@@ -59,7 +59,7 @@
 #include "usb_descriptors.h"
 //#include "lib_mcu/power/power_drv.h"
 //#include "lib_mcu/wdt/wdt_drv.h"
-#include "../pll/pll_drv.h"
+#include "usb/pll_drv.h"
 #include "device/usb_device_task.h"
 
 //#ifndef  USE_USB_PADS_REGULATOR
