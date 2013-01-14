@@ -15,6 +15,13 @@
 *.exe
 *.out
 *.app
+*.elf
+*.eep
+*.hex
+*.lss
+*.map
+*.sym
+*.d
 
 # IDE
 *.atsuo

@@ -71,8 +71,10 @@
 			/** LED mask for the first LED on the board. */
 			#define LEDS_LED1        (1 << 1)
 
+			#define LEDS_LED2		 (1 << 7)
+
 			/** LED mask for all the LEDs on the board. */
-			#define LEDS_ALL_LEDS    LEDS_LED1
+			#define LEDS_ALL_LEDS    (LEDS_LED1 | LEDS_LED2)
 
 			/** LED mask for the none of the board LEDs. */
 			#define LEDS_NO_LEDS     0
