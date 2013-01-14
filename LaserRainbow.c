@@ -57,21 +57,21 @@ static FILE USBSerialStream;
 /** Interrupt handler for managing the software PWM channels for the LEDs */
 ISR(TIMER0_COMPA_vect, ISR_BLOCK)
 {
-	uint8_t LEDMask = LEDS_ALL_LEDS;
+	/*
+	 *	Handle data from sensors
+	 */
+	/*uint8_t LEDMask = LEDS_ALL_LEDS;
 
 	if (++SoftPWM_Count == 0b00011111)
 	  SoftPWM_Count = 0;
 
 	if (SoftPWM_Count >= SoftPWM_Channel1_Duty)
 	  LEDMask &= ~LEDS_LED1;
-/*
+
 	if (SoftPWM_Count >= SoftPWM_Channel2_Duty)
 	  LEDMask &= ~LEDS_LED2;
 
-	if (SoftPWM_Count >= SoftPWM_Channel3_Duty)
-	  LEDMask &= ~LEDS_LED3;
-*/
-	LEDs_SetAllLEDs(LEDMask);
+	LEDs_SetAllLEDs(LEDMask);*/
 }
 
 /** Main program entry point. This routine contains the overall program flow, including initial
@@ -86,24 +86,12 @@ int main(void)
 
 	sei();
 
+	/*
+	 *	Start listening for USB commands
+	 */
+
 	for (;;)
 	{
-		/* Read in next LED colour command from the host */
-		uint8_t ColourUpdate = fgetc(&USBSerialStream);
-
-		/* Top 3 bits select the LED, bottom 5 control the brightness */
-		uint8_t Channel = (ColourUpdate & 0b11100000);
-		uint8_t Duty    = (ColourUpdate & 0b00011111);
-
-		if (Channel & (1 << 5))
-		  SoftPWM_Channel1_Duty = Duty;
-
-		if (Channel & (1 << 6))
-		  SoftPWM_Channel2_Duty = Duty;
-
-		if (Channel & (1 << 7))
-		  SoftPWM_Channel3_Duty = Duty;
-
 		CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
 		USB_USBTask();
 	}
@@ -120,7 +108,7 @@ void SetupHardware(void)
 	clock_prescale_set(clock_div_1);
 
 	/* Hardware Initialization */
-	LEDs_Init();
+	//LEDs_Init();
 	USB_Init();
 
 	/* Timer Initialization */
@@ -128,6 +116,11 @@ void SetupHardware(void)
 	TCCR0A = (1 << WGM01);
 	TCCR0B = (1 << CS00);
 	TIMSK0 = (1 << OCIE0A);
+
+	/* PORTB setup */
+	DDRB = 0x81;
+	PORTB = LEDS_LED1;
+	//LEDs_TurnOnLEDs(LEDS_LED2);
 }
 
 /** Event handler for the library USB Configuration Changed event. */
@@ -139,6 +132,65 @@ void EVENT_USB_Device_ConfigurationChanged(void)
 /** Event handler for the library USB Control Request reception event. */
 void EVENT_USB_Device_ControlRequest(void)
 {
-	CDC_Device_ProcessControlRequest(&VirtualSerial_CDC_Interface);
+	// WORKING
+	/*if (USB_ControlRequest.bmRequestType == 0x40) {
+		PORTB = 0x80;
+	} else {
+		PORTB = 0x01;
+	}*/
+
+	if ((USB_ControlRequest.bmRequestType == 0x40) && (USB_ControlRequest.bRequest == 7) && (USB_ControlRequest.wIndex == 1)) {
+		PORTB |= (LED_LED1 & USB_ControlRequest;
+	} else {
+		PORTB |= LED_LED2;
+	}
+
+	//CDC_Device_ProcessControlRequest(&VirtualSerial_CDC_Interface);
+	/*if(USB_ControlRequest.bmRequestType == 0x40)
+	if(((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_TYPE) == REQTYPE_CLASS) && ((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_RECIPIENT) == REQREC_DEVICE))
+	{
+		if ((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_DIRECTION) == REQDIR_HOSTTODEVICE)
+		{
+			switch(USB_ControlRequest.bRequest)
+			{
+				case LED_CMD_SET:
+					process_LED_CMD_SET();
+					break;
+				default:
+					break;
+		}
+	} else {
+			switch(USB_ControlRequest.bRequest)
+			{
+				case SERVO_CMD_GET:
+					process_SERVO_CMD_GET();
+					break;
+				case SERVO_CMD_GETALL:
+					process_SERVO_CMD_GETALL();
+					break;
+				default:
+					break;
+			}
+		}
+	}*/
 }
 
+void process_LED_CMD_SET(void) {
+
+	/* marks the command as "accepted" by the
+	application, so that LUFA does not process it: */
+	Endpoint_ClearSETUP();
+
+	/* mark the whole request as successful: */
+	Endpoint_ClearStatusStage();
+
+	/* process command parameters: */
+	switch(USB_ControlRequest.wIndex) {
+		case 1:
+			PORTB |= (LEDS_LED1 & USB_ControlRequest.wValue);
+			break;
+		case 2:
+			PORTB |= (LEDS_LED2 & USB_ControlRequest.wValue);
+			break;
+	}
+}

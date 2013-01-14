@@ -22,11 +22,14 @@
 		#include "Config/LEDs.h"
 		#include <LUFA/Drivers/USB/USB.h>
 
+#define LED_CMD_SET 7
+
 	/* Function Prototypes: */
 		void SetupHardware(void);
 
 		void EVENT_USB_Device_ConfigurationChanged(void);
 		void EVENT_USB_Device_ControlRequest(void);
 
-#endif
+		void process_LED_CMD_SET(void);
 
+#endif
