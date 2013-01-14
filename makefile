@@ -11,7 +11,7 @@
 
 MCU          = atmega32u4
 ARCH         = AVR8
-BOARD        = LASERRAINBOW
+BOARD        = USER
 F_CPU        = 8000000
 F_USB        = $(F_CPU)
 OPTIMIZATION = s
