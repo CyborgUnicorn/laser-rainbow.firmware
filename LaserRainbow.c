@@ -119,9 +119,9 @@ void SetupHardware(void)
 
 	/* PORTB setup */
 	DDRB = 0x81;
-	PORTB = LEDS_LED1;
+	//PORTB = LEDS_LED1;
 	//LEDs_TurnOnLEDs(LEDS_LED2);
-}
+}	
 
 /** Event handler for the library USB Configuration Changed event. */
 void EVENT_USB_Device_ConfigurationChanged(void)
@@ -140,9 +140,15 @@ void EVENT_USB_Device_ControlRequest(void)
 	}*/
 
 	if ((USB_ControlRequest.bmRequestType == 0x40) && (USB_ControlRequest.bRequest == 7) && (USB_ControlRequest.wIndex == 1)) {
-		PORTB |= (LED_LED1 & USB_ControlRequest.wValue);
-	} else {
-		PORTB |= LED_LED2;
+		if ( USB_ControlRequest.wValue == 1 )
+			PORTB |= (0x80);
+		else
+			PORTB &= ~(0x80);
+	} else if ((USB_ControlRequest.bmRequestType == 0x40) && (USB_ControlRequest.bRequest == 7) && (USB_ControlRequest.wIndex == 2)) {
+		if ( USB_ControlRequest.wValue == 1 )
+			PORTB |= (0x01);
+		else
+			PORTB &= ~(0x01);
 	}
 
 	//CDC_Device_ProcessControlRequest(&VirtualSerial_CDC_Interface);
