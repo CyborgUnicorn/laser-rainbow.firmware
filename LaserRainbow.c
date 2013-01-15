@@ -140,7 +140,7 @@ void EVENT_USB_Device_ControlRequest(void)
 	}*/
 
 	if ((USB_ControlRequest.bmRequestType == 0x40) && (USB_ControlRequest.bRequest == 7) && (USB_ControlRequest.wIndex == 1)) {
-		PORTB |= (LED_LED1 & USB_ControlRequest;
+		PORTB |= (LED_LED1 & USB_ControlRequest);
 	} else {
 		PORTB |= LED_LED2;
 	}
