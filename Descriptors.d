@@ -58,12 +58,36 @@ Descriptors.o: Descriptors.c Descriptors.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Core/Endpoint.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Core/DeviceStandardReq.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Core/EndpointStream.h \
-  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/CDCClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/AndroidAccessoryClass.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Class/../Core/USBMode.h \
-  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/AudioClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/AudioClassDevice.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../../USB.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/AudioClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/../../Core/StdDescriptors.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/CDCClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h \
   lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h \
-  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/../../Core/StdDescriptors.h
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/HIDClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/HIDClassDevice.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDParser.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/../../../../Common/Common.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDReportData.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/MassStorageClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/MassStorageClassDevice.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/MassStorageClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/MIDIClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/MIDIClassDevice.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/MIDIClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/AudioClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/PrinterClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/RNDISClass.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/RNDISClassDevice.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/RNDISClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h \
+  lib/trunk/LUFA/../LUFA/Drivers/USB/Class/StillImageClass.h
 
 Descriptors.h:
 
@@ -185,14 +209,62 @@ lib/trunk/LUFA/../LUFA/Drivers/USB/Core/DeviceStandardReq.h:
 
 lib/trunk/LUFA/../LUFA/Drivers/USB/Core/EndpointStream.h:
 
-lib/trunk/LUFA/../LUFA/Drivers/USB/Class/CDCClass.h:
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/AndroidAccessoryClass.h:
 
 lib/trunk/LUFA/../LUFA/Drivers/USB/Class/../Core/USBMode.h:
 
-lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h:
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/AudioClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/AudioClassDevice.h:
 
 lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../../USB.h:
 
-lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h:
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/AudioClassCommon.h:
 
 lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/../../Core/StdDescriptors.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/CDCClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/CDCClassDevice.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/HIDClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/HIDClassDevice.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDParser.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/../../../../Common/Common.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDReportData.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/HIDClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/MassStorageClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/MassStorageClassDevice.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/MassStorageClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/MIDIClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/MIDIClassDevice.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/MIDIClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/AudioClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/PrinterClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/RNDISClass.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/RNDISClassDevice.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/RNDISClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/Device/../Common/CDCClassCommon.h:
+
+lib/trunk/LUFA/../LUFA/Drivers/USB/Class/StillImageClass.h:

@@ -22,14 +22,24 @@
 		#include "Config/LEDs.h"
 		#include <LUFA/Drivers/USB/USB.h>
 
-#define LED_CMD_SET 7
+	#define LED_CMD_SET 7
 
 	/* Function Prototypes: */
-		void SetupHardware(void);
-
+		void EVENT_USB_Device_Connect(void);
+		void EVENT_USB_Device_Disconnect(void);
 		void EVENT_USB_Device_ConfigurationChanged(void);
 		void EVENT_USB_Device_ControlRequest(void);
+		void EVENT_USB_Device_StartOfFrame(void);
 
-		void process_LED_CMD_SET(void);
+		bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
+		                                         uint8_t* const ReportID,
+		                                         const uint8_t ReportType,
+		                                         void* ReportData,
+		                                         uint16_t* const ReportSize);
+		void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
+		                                          const uint8_t ReportID,
+		                                          const uint8_t ReportType,
+		                                          const void* ReportData,
+		                                          const uint16_t ReportSize);
 
 #endif
