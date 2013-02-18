@@ -17,6 +17,8 @@
 		#include <string.h>
 		#include <stdio.h>
 
+		#include "lzr_defines.h"
+
 		#include "Descriptors.h"
 
 		#include "Config/LEDs.h"
