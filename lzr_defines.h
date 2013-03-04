@@ -15,4 +15,11 @@ typedef struct {
 	uint8_t v;
 } Lzr_voltage;
 
+typedef struct {
+	uint16_t cnt; // count
+	uint16_t rh; // humidity
+	uint16_t t; // temperature
+	uint8_t chk; // checksum
+} Lzr_humi_temp;
+
 #endif 

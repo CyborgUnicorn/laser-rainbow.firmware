@@ -43,6 +43,8 @@ int main(void)
 	/* Hardware Initialization */
 	USB_Init();
 
+	InitStupidPin();
+
 	/* PORTB setup */
 	DDRB = LEDS_ALL_LEDS;
 	PORTB = LEDS_LED1;
@@ -60,11 +62,9 @@ int main(void)
 		
 		if (counter == 32768) {
 			counter = 0;
-			//PORTB ^= LEDS_LED1;
+			PORTB ^= LEDS_LED1;
 		}
 		counter++;
-		
-		ReadStupidPin();
 	}
 }
 
@@ -120,39 +120,14 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
-	//PORTB ^= LEDS_LED2;
-	uint8_t* Data = (uint8_t*)ReportData;
-	uint16_t i = 0;
+	ReadStupidPin();
 
-
-		Data[0] = 'R';
-		Data[1] = 'H';
-		Data[2] = '=';
-		Data[3] = (uint8_t)(rh >> 8);
-		Data[4] = (uint8_t)(rh);
-		Data[5] = ',';
-		Data[6] = 'T';
-		Data[7] = '=';
-		Data[8] = (uint8_t)(t >> 8);
-		Data[9] = (uint8_t)(t);
-		Data[10] = ',';
-		Data[11] = 'c';
-		Data[12] = 'h';
-		Data[13] = 'k';
-		Data[14] = '=';
-		Data[15] = chk;
-		Data[16] = 'Q';
-		Data[17] = 'R';
-		Data[18] = 'S';
-		Data[19] = 'T';
-		Data[20] = 'U';
-		Data[21] = 'V';
-		Data[22] = 'W';
-		Data[23] = 'X';
-
-		*ReportSize = GENERIC_REPORT_SIZE;
-
-	PORTB ^= LEDS_LED1;
+	Lzr_humi_temp* report = (Lzr_humi_temp*)ReportData;
+	report->cnt = counter;
+	report->rh = rh;
+	report->t = t;
+	report->chk = chk;
+	*ReportSize = GENERIC_REPORT_SIZE;
 
 	return true;
 }
@@ -184,33 +159,50 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 	latestReportType = ReportType;
 */
 }
+#define set_bit(address,bit) (address |= (1<<bit))
+#define clear_bit(address,bit) (address &= ~(1<<bit))
+#define toggle_bit(address,bit) (address ^= (1<<bit))
+#define check_bit(address,bit) ((address & (1<<bit)) == (1<<bit))
 
-void ReadStupidPin() {
+#define VCCPIN (1 << 5)
+#define DATAPIN (1 << 6)
+#define DATA_IS_HIGH ( (PINF & DATAPIN) == DATAPIN)
+#define DATA_IS_LOW ( (PINF & DATAPIN) == 0)
 
-#define VCCPIN 5
-#define DATAPIN 6
-#define DATA_IS_HIGH (PINF & (1 << DATAPIN) > 0)
-#define DATA_IS_LOW (PINF & (1 << DATAPIN) == 0)
+void InitStupidPin(void) {
+	DDRF |= VCCPIN;	// Set VCC pin as output
+	PORTF |= VCCPIN;  // Enable VCC
+
+	_delay_ms(1200);
+}
+
+void ReadStupidPin(void) {
+
 
 	uint8_t i = 0;
-
-	DDRF |= (1 << VCCPIN);	// Set VCC pin as output
-	PORTF |= (1 << VCCPIN);  // Enable VCC
 
 	// PF5 = VCC
 	// PF6 = Data
 
+	DDRF &= ~DATAPIN;	// Data as input
+	while(DATA_IS_LOW);
+	
+
 	// Pull down 1-10 ms
 	// Pull up 20-40 us
 	// Wait for response
-	DDRF |= (1 << DATAPIN);	// Data as output
-	PORTF |= (1 << DATAPIN);	// High first...
-	_delay_us(5);
-	PORTF |= (0 << DATAPIN);	// then low for 5 ms...
-	_delay_ms(5);
-	PORTF |= (1 << DATAPIN);	// then high for 30 us...
+	DDRF |= DATAPIN;	// Data as output
+	_delay_loop_2(1);
+
+
+	//PORTF |= DATAPIN;	// High first...
+	//_delay_us(5);
+	PORTF &= ~DATAPIN;	// then low for 3 ms...
+	_delay_ms(3);
+	PORTF |= DATAPIN;	// then high for 30 us...
 	_delay_us(30);
-	DDRF |= (0 << DATAPIN);	// Data as input
+	
+	DDRF &= ~DATAPIN;	// Data as input
 	// Sensor does stuff here
 
 	// Sensor pulls low for 80 us
@@ -219,25 +211,29 @@ void ReadStupidPin() {
 	// Low voltage for 50 us
 	// Actual bit
 
-	while(DATA_IS_LOW);
 	while(DATA_IS_HIGH);
+	PORTB |= LEDS_LED2;
+	while(DATA_IS_LOW);
+
 
 	// Humidity
 	for(i = 0; i < 16; i++) {
 		while(DATA_IS_LOW);
-		_delay_us(35);
+		_delay_us(55);
 
 		if (DATA_IS_HIGH) {
 			rh |= 0x01 << i;
+			while(DATA_IS_LOW);
 		}
 	}
 
 	for(i = 0; i < 16; i++) {
 		while(DATA_IS_LOW);
-		_delay_us(35);
+		_delay_us(55);
 
 		if (DATA_IS_HIGH) {
 			t |= 0x01 << i;
+			while(DATA_IS_LOW);
 		}
 	}
 
@@ -248,12 +244,14 @@ void ReadStupidPin() {
 
 		if (DATA_IS_HIGH) {
 			chk |= 0x01 << i;
+			while(DATA_IS_LOW);
 		}
 	}
 
 	if (((uint8_t)(rh >> 8) + (uint8_t)rh + (uint8_t)(t >> 8) + (uint8_t)t) != chk) {
 		// ERRROROROROR!
+		//PORTB &= ~LEDS_LED2;
 	} else {
-		PORTB ^= LEDS_LED2;
+		PORTB |= LEDS_LED2;
 	}
 }	

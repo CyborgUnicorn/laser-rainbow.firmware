@@ -13,7 +13,7 @@
 		#include <LUFA/Drivers/USB/USB.h>
 
  		
- 	#define GENERIC_REPORT_SIZE sizeof(Lzr_report)
+ 	#define GENERIC_REPORT_SIZE sizeof(Lzr_humi_temp)
 	
 	/* Type Defines: */
 		/** Type define for the device configuration descriptor structure. This must be defined in the
