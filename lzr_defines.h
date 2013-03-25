@@ -10,6 +10,12 @@ typedef struct {
 	uint16_t adc1;
 } Lzr_report;
 
+
+typedef struct {
+	uint16_t t;
+	uint16_t adc0;
+} Lzr_oscilloscope;
+
 typedef struct {
 	uint32_t t;
 	uint8_t v;
@@ -21,5 +27,8 @@ typedef struct {
 	uint16_t t; // temperature
 	uint8_t chk; // checksum
 } Lzr_humi_temp;
+
+
+ #define GENERIC_REPORT_SIZE 64 //sizeof(Lzr_humi_temp)
 
 #endif 

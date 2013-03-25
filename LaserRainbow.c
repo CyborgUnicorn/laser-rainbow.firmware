@@ -43,7 +43,7 @@ int main(void)
 	/* Hardware Initialization */
 	USB_Init();
 
-	InitStupidPin();
+	//InitStupidPin();
 
 	/* PORTB setup */
 	DDRB = LEDS_ALL_LEDS;
@@ -60,9 +60,13 @@ int main(void)
 		HID_Device_USBTask(&Generic_HID_Interface);
 		USB_USBTask();
 		
+		//ReadStupidPin();
+
 		if (counter == 32768) {
 			counter = 0;
 			PORTB ^= LEDS_LED1;
+		
+			InitStupidPin();
 		}
 		counter++;
 	}
@@ -120,6 +124,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
+	/*
 	ReadStupidPin();
 
 	Lzr_humi_temp* report = (Lzr_humi_temp*)ReportData;
@@ -128,8 +133,11 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 	report->t = t;
 	report->chk = chk;
 	*ReportSize = GENERIC_REPORT_SIZE;
-
+	
 	return true;
+	*/
+
+	return false;
 }
 
 /** HID class driver callback function for the processing of HID reports from the host.
@@ -170,10 +178,29 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 #define DATA_IS_LOW ( (PINF & DATAPIN) == 0)
 
 void InitStupidPin(void) {
-	DDRF |= VCCPIN;	// Set VCC pin as output
-	PORTF |= VCCPIN;  // Enable VCC
+	//DDRF |= VCCPIN;	// Set VCC pin as output
+	//PORTF |= VCCPIN;  // Enable VCC
+	
 
-	_delay_ms(1200);
+	//DDRF &= ~DATAPIN;	// Data as input
+	
+
+	_delay_ms(2000);
+	
+	DDRF = 0x00;
+	
+	/*
+	for (uint16_t i=0; i < 5; ++i)
+	{
+		_delay_ms(100);
+
+		PORTF = 0x01;
+		
+		_delay_ms(100);
+
+		PORTF = 0x00;
+	}
+	*/
 }
 
 void ReadStupidPin(void) {
@@ -195,8 +222,8 @@ void ReadStupidPin(void) {
 	_delay_loop_2(1);
 
 
-	//PORTF |= DATAPIN;	// High first...
-	//_delay_us(5);
+	PORTF |= DATAPIN;	// High first...
+	_delay_us(5);
 	PORTF &= ~DATAPIN;	// then low for 3 ms...
 	_delay_ms(3);
 	PORTF |= DATAPIN;	// then high for 30 us...

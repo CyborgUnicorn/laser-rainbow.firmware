@@ -6,12 +6,14 @@
 
 #include "LaserRainbow.h"
 #include "adc.h"
+#include "adc_sampler.h"
 
 /** Buffer to hold the previously generated HID report, for comparison purposes inside the HID class driver. */
 static uint8_t PrevHIDReportBuffer[GENERIC_REPORT_SIZE];
 
 static uint16_t counter;
-static uint8_t cnt;
+static uint16_t cnt;
+
 /** HID Class driver interface configuration and state information. This structure is
  *  passed to all HID Class driver functions, so that multiple instances of the same class
  *  within a device can be differentiated from one another.
@@ -60,6 +62,9 @@ int main(void)
 
 	sei();
 
+	lzr_oci_init();
+	lzr_oci_debug(1);
+
 	for (;;)
 	{
 		/* Read ADCs */
@@ -67,12 +72,20 @@ int main(void)
 		HID_Device_USBTask(&Generic_HID_Interface);
 		USB_USBTask();
 
-		if (counter == 16384) {
+
+		if (counter == 32768) {
 			counter = 0;
 			PORTB ^= LEDS_LED1;
 		}
+		if ( cnt == 512 ) {
+			lzr_oci_push_sample();
+			cnt = 0;
+		}
 		counter++;
+		cnt++;
 	}
+
+	lzr_oci_destroy();
 }
 
 /** Event handler for the library USB Connection event. */
@@ -123,6 +136,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
+	/*
 	Lzr_report* report = (Lzr_report*)ReportData;
 	report->a = 1;
 	report->b = cnt;
@@ -131,6 +145,50 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 	report->adc1 = adc_read(1);
 	*ReportSize = GENERIC_REPORT_SIZE;
 	cnt++;
+	*/
+
+	/*
+	Lzr_oscilloscope* report = (Lzr_oscilloscope*)ReportData;
+	report->t = counter;
+	report->adc0 = adc_read(0);
+	*ReportSize = GENERIC_REPORT_SIZE;
+	
+	++cnt;
+	*/
+
+	/*
+	uint8_t *data = ReportData;
+	for ( uint16_t i=0; i < 128; ++i ) {
+		data[i] = i;
+ 	}
+
+ 	data[0] = (uint8_t)(counter << 8);
+ 	data[1] = (uint8_t)counter;
+
+	*ReportSize = GENERIC_REPORT_SIZE;
+	*/
+
+	if ( lzr_oci_samples_ready() ) {
+		uint8_t *data = ReportData;
+	
+		lzr_oci_read( ReportData );
+		
+		data[60] = 'A';
+		data[61] = 'B';
+		data[62] = 'C';
+		data[63] = '\0';
+		/*data[124] = 'E';
+		data[125] = 'F';
+		data[126] = 'G';
+		data[127] = '\0';
+		*/
+		
+
+		*ReportSize = GENERIC_REPORT_SIZE;
+
+		return true;
+	}
+
 	return false;
 }
 

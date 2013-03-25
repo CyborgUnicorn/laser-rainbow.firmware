@@ -30,7 +30,10 @@ void adc_init(void) {
 	*/
 
 	/* Internal 2.56V Voltage Reference */
-	ADMUX |= (1 << REFS1)|(1 << REFS0)/*|(1 << ADLAR)*/;
+	//ADMUX |= (1 << REFS1)|(1 << REFS0)/*|(1 << ADLAR)*/;
+
+	/* AVCC with external capacitor on AREF pin */
+	ADMUX |= (0 << REFS1)|(1 << REFS0)/*|(1 << ADLAR)*/;
 
 	/* Enable ADC with /64 prescaling */
 	ADCSRA |= (1 << ADEN)|(1 << ADPS2)|(1 << ADPS1);

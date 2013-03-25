@@ -14,13 +14,18 @@ BOARD        = USER
 F_CPU        = 8000000
 F_USB        = $(F_CPU)
 OPTIMIZATION = s
+
+#TARGET       = LaserRainbow
+#SRC          = $(TARGET).c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+
 TARGET       = LaserRainbow
-SRC          = $(TARGET).c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+SRC 		 = adc_main.c adc.c adc_sampler.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+#SRC          = LaserRainbow.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+
 LUFA_PATH    = lib/trunk/LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/
 LD_FLAGS     =
 
-#all: #SRC     = $(TARGET).c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 all:
 
 # Include LUFA build script makefiles
