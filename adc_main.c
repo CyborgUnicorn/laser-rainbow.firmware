@@ -62,8 +62,8 @@ int main(void)
 
 	sei();
 
-	lzr_oci_init();
-	lzr_oci_debug(1);
+	lzr_oci_init(1);
+	lzr_oci_debug(DEBUG_SIN);
 
 	for (;;)
 	{
@@ -73,11 +73,11 @@ int main(void)
 		USB_USBTask();
 
 
-		if (counter == 32768) {
+		if (counter == 32768/4) {
 			counter = 0;
 			PORTB ^= LEDS_LED1;
 		}
-		if ( cnt == 512 ) {
+		if ( cnt == 128 ) {
 			lzr_oci_push_sample();
 			cnt = 0;
 		}
@@ -136,58 +136,18 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
-	/*
-	Lzr_report* report = (Lzr_report*)ReportData;
-	report->a = 1;
-	report->b = cnt;
-	report->c = -1;
-	report->adc0 = adc_read(0);
-	report->adc1 = adc_read(1);
-	*ReportSize = GENERIC_REPORT_SIZE;
-	cnt++;
-	*/
-
-	/*
-	Lzr_oscilloscope* report = (Lzr_oscilloscope*)ReportData;
-	report->t = counter;
-	report->adc0 = adc_read(0);
-	*ReportSize = GENERIC_REPORT_SIZE;
-	
-	++cnt;
-	*/
-
-	/*
-	uint8_t *data = ReportData;
-	for ( uint16_t i=0; i < 128; ++i ) {
-		data[i] = i;
- 	}
-
- 	data[0] = (uint8_t)(counter << 8);
- 	data[1] = (uint8_t)counter;
-
-	*ReportSize = GENERIC_REPORT_SIZE;
-	*/
-
 	if ( lzr_oci_samples_ready() ) {
-		uint8_t *data = ReportData;
-	
-		lzr_oci_read( ReportData );
 		
-		data[60] = 'A';
-		data[61] = 'B';
-		data[62] = 'C';
-		data[63] = '\0';
-		/*data[124] = 'E';
-		data[125] = 'F';
-		data[126] = 'G';
-		data[127] = '\0';
-		*/
-		
+		uint16_t i = 0;
+		uint16_t *data = (uint16_t*)ReportData;
+
+		lzr_oci_read( data );
 
 		*ReportSize = GENERIC_REPORT_SIZE;
 
 		return true;
 	}
+	*ReportSize = 0;
 
 	return false;
 }

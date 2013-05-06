@@ -29,6 +29,6 @@ typedef struct {
 } Lzr_humi_temp;
 
 
- #define GENERIC_REPORT_SIZE 64 //sizeof(Lzr_humi_temp)
+#define GENERIC_REPORT_SIZE 128 //sizeof(Lzr_humi_temp)
 
 #endif 
