@@ -55,7 +55,8 @@ void lzr_oci_init(uint16_t in_channels)
 
 void lzr_oci_destroy(void)
 {
-	free(samples);
+	free(samples1);
+	free(samples2);
 }
 
 void lzr_oci_debug( uint8_t flag )
@@ -88,8 +89,8 @@ void lzr_oci_read_sample( lzr_sample *sample )
 	for ( i = 0, ii=0; i < MAX_NUM_CHANNELS; ++i ) {
 
 		if ( (channels & (1<<i)) != 0) {
+			//???
 			sample->channels[ii] = lzr_oci_read_sample_value(i);
-			
 			++ii;
 		}
 		
@@ -112,23 +113,23 @@ void lzr_oci_push_sample(void)
 void lzr_oci_read( uint16_t *out )
 {
 	uint32_t i, ii, idx;
-
+	
 	ptr_last_read = ptr_sample_write;
 	
 	flag_has_data = 0;
 	debug_sample = 0;
 	idx = 0;
-
+	
 	for ( i = 0; i < num_samples; ++i ) {
 
 		for ( ii = 0; ii < num_channels; ++ii  )
 			out[idx++] = samples[i].channels[ii]; 
 
 	}
-/*
+
 	if ( (++debug_sin_offset) == 360 ) {
 		debug_sin_offset = 0;
-	}*/
+	}
 }
 
 /** utils **/

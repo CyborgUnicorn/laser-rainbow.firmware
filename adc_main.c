@@ -65,6 +65,10 @@ int main(void)
 	lzr_oci_init(1);
 	lzr_oci_debug(DEBUG_SIN);
 
+	for ( uint32_t i = 0; i < 140; ++i ) {
+		lzr_oci_push_sample();
+	}
+
 	for (;;)
 	{
 		/* Read ADCs */
@@ -130,6 +134,7 @@ void EVENT_USB_Device_StartOfFrame(void)
  *
  *  \return Boolean true to force the sending of the report, false to let the library determine if it needs to be sent
  */
+
 bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
                                          uint8_t* const ReportID,
                                          const uint8_t ReportType,
@@ -138,7 +143,6 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 {
 	if ( lzr_oci_samples_ready() ) {
 		
-		uint16_t i = 0;
 		uint16_t *data = (uint16_t*)ReportData;
 
 		lzr_oci_read( data );
@@ -146,10 +150,10 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 		*ReportSize = GENERIC_REPORT_SIZE;
 
 		return true;
+	} else {
+		*ReportSize = 0;
+		return false;
 	}
-	*ReportSize = 0;
-
-	return false;
 }
 
 /** HID class driver callback function for the processing of HID reports from the host.
