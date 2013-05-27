@@ -55,8 +55,7 @@ void lzr_oci_init(uint16_t in_channels)
 
 void lzr_oci_destroy(void)
 {
-	free(samples1);
-	free(samples2);
+	free(samples);
 }
 
 void lzr_oci_debug( uint8_t flag )
@@ -89,7 +88,8 @@ void lzr_oci_read_sample( lzr_sample *sample )
 	for ( i = 0, ii=0; i < MAX_NUM_CHANNELS; ++i ) {
 
 		if ( (channels & (1<<i)) != 0) {
-			//???
+			// i = channel, ii = index
+			// this allows us to read from any channels we want
 			sample->channels[ii] = lzr_oci_read_sample_value(i);
 			++ii;
 		}

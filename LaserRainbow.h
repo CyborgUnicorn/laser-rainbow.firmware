@@ -7,7 +7,6 @@
 #define _LASERRAINBOW_H_
 
 #define USB_CAN_BE_DEVICE
-#define __INCLUDE_FROM_LEDS_H
 
 	/* Includes: */
 		#include <avr/io.h>
@@ -21,27 +20,29 @@
 
 		#include "Descriptors.h"
 
-		#include "Config/LEDs.h"
+		//#include <LUFA/Drivers/Board/LEDS.h>
 		#include <LUFA/Drivers/USB/USB.h>
 
-	#define LED_CMD_SET 7
 
 	/* Function Prototypes: */
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);
 		void EVENT_USB_Device_ConfigurationChanged(void);
 		void EVENT_USB_Device_ControlRequest(void);
-		void EVENT_USB_Device_StartOfFrame(void);
 
-		bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-		                                         uint8_t* const ReportID,
-		                                         const uint8_t ReportType,
-		                                         void* ReportData,
-		                                         uint16_t* const ReportSize);
-		void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
-		                                          const uint8_t ReportID,
-		                                          const uint8_t ReportType,
-		                                          const void* ReportData,
-		                                          const uint16_t ReportSize);
+		void SetupHardware(void);
+
+		/* Macros: */
+			/** LED mask for the first LED on the board. */
+			#define LEDS_LED1        (1 << 7)
+
+			#define LEDS_LED2		 (1)
+
+			/** LED mask for all the LEDs on the board. */
+			#define LEDS_ALL_LEDS    (LEDS_LED1 | LEDS_LED2)
+
+			/** LED mask for the none of the board LEDs. */
+			#define LEDS_NO_LEDS     0
+
 
 #endif

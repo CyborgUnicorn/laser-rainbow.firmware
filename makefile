@@ -15,11 +15,11 @@ F_CPU        = 8000000
 F_USB        = $(F_CPU)
 OPTIMIZATION = s
 
-#TARGET       = LaserRainbow
-#SRC          = $(TARGET).c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
-
 TARGET       = LaserRainbow
-SRC 		 = adc_main.c adc.c adc_sampler.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+SRC          = $(TARGET).c adc.c adc_sampler.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+
+#TARGET       = LaserRainbow
+#SRC 		 = adc_main.c adc.c adc_sampler.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 #SRC          = LaserRainbow.c Descriptors.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 
 LUFA_PATH    = lib/trunk/LUFA
