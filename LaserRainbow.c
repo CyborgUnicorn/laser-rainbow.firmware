@@ -120,6 +120,7 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
                                          void* ReportData,
                                          uint16_t* const ReportSize)
 {
+	/*
 	ReadStupidPin();
 
 	Lzr_humi_temp* report = (Lzr_humi_temp*)ReportData;
@@ -129,7 +130,9 @@ bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDIn
 	report->chk = chk;
 	*ReportSize = GENERIC_REPORT_SIZE;
 
-	return true;
+	return true;*/
+
+	return false;
 }
 
 /** HID class driver callback function for the processing of HID reports from the host.
@@ -164,45 +167,53 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 #define toggle_bit(address,bit) (address ^= (1<<bit))
 #define check_bit(address,bit) ((address & (1<<bit)) == (1<<bit))
 
-#define VCCPIN (1 << 5)
-#define DATAPIN (1 << 6)
-#define DATA_IS_HIGH ( (PINF & DATAPIN) == DATAPIN)
-#define DATA_IS_LOW ( (PINF & DATAPIN) == 0)
+#define VCCPIN 5
+#define DATAPIN 7
+#define DATA_IS_HIGH ( (PINF & (1<<DATAPIN)) == (1<<DATAPIN))
+#define DATA_IS_LOW ( (PINF & (1<<DATAPIN)) == 0)
 
 void InitStupidPin(void) {
-	DDRF |= VCCPIN;	// Set VCC pin as output
-	PORTF |= VCCPIN;  // Enable VCC
+	set_bit(DDRF, VCCPIN);	// Set VCC pin as output
+	set_bit(PORTF, VCCPIN);  // Enable VCC
+
+	set_bit(DDRF, DATAPIN); // Set as input
+	set_bit(PORTF, DATAPIN);
+
+	// 1 output, 0 input
+	clear_bit(DDRF, DATAPIN); // Set as input
+	clear_bit(PORTF, DATAPIN);
 
 	_delay_ms(1200);
 }
 
 void ReadStupidPin(void) {
 
+	_delay_ms(500);
 
 	uint8_t i = 0;
 
 	// PF5 = VCC
 	// PF6 = Data
 
-	DDRF &= ~DATAPIN;	// Data as input
-	while(DATA_IS_LOW);
+	//DDRF &= ~DATAPIN;	// Data as input
+	//while(DATA_IS_LOW);
 	
 
 	// Pull down 1-10 ms
 	// Pull up 20-40 us
 	// Wait for response
-	DDRF |= DATAPIN;	// Data as output
-	_delay_loop_2(1);
+	set_bit(DDRF,DATAPIN);	// Data as output
+	_delay_ms(10);
 
 
 	//PORTF |= DATAPIN;	// High first...
 	//_delay_us(5);
-	PORTF &= ~DATAPIN;	// then low for 3 ms...
-	_delay_ms(3);
-	PORTF |= DATAPIN;	// then high for 30 us...
+	clear_bit(PORTF, DATAPIN);	// low for 3 ms...
+	_delay_ms(5);
+	set_bit(PORTF,DATAPIN);	// high for 30 us...
 	_delay_us(30);
 	
-	DDRF &= ~DATAPIN;	// Data as input
+	clear_bit(DDRF, DATAPIN);	// Data as input
 	// Sensor does stuff here
 
 	// Sensor pulls low for 80 us
@@ -214,6 +225,8 @@ void ReadStupidPin(void) {
 	while(DATA_IS_HIGH);
 	PORTB |= LEDS_LED2;
 	while(DATA_IS_LOW);
+
+	PORTB ^= LEDS_LED1;
 
 
 	// Humidity
